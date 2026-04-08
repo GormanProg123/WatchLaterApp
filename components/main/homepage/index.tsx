@@ -13,9 +13,10 @@ import { ItemService, Item } from "../../../api/servises/item.service";
 import { AddButtonItem } from "../../features/ButtonItem";
 import { ItemAddingForm } from "../../features/ItemAddingForm";
 import { ItemLayout } from "../../features/ItemLayout";
-import { Svg, Polygon } from "react-native-svg";
 import { useRouter } from "expo-router";
 import { ItemStatus } from "../../../api/types/item.types";
+import { StatusList } from "../../features/StatusLists";
+import { Platform } from "../../../api/types/item.types";
 
 const { width } = Dimensions.get("window");
 
@@ -25,6 +26,20 @@ export const HomePageScreen = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [formVisible, setFormVisible] = useState(false);
   const [items, setItems] = useState<Item[]>([]);
+  const [selectedPlatform, setSelectedPlatform] = useState<Platform | "all">(
+    "all",
+  );
+
+  const counts = {
+    all: items.length,
+    [Platform.YOUTUBE]: items.filter((i) => i.platform === Platform.YOUTUBE)
+      .length,
+    [Platform.MOVIES]: items.filter((i) => i.platform === Platform.MOVIES)
+      .length,
+    [Platform.SERIES]: items.filter((i) => i.platform === Platform.SERIES)
+      .length,
+    [Platform.OTHER]: items.filter((i) => i.platform === Platform.OTHER).length,
+  };
 
   const loadItems = useCallback(async () => {
     try {
@@ -53,12 +68,17 @@ export const HomePageScreen = () => {
     loadItems();
   };
 
-  const filteredItems = items.filter((item) =>
-    searchQuery
+  const filteredItems = items.filter((item) => {
+    const matchesSearch = searchQuery
       ? item.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.url.toLowerCase().includes(searchQuery.toLowerCase())
-      : true,
-  );
+      : true;
+
+    const matchesPlatform =
+      selectedPlatform === "all" || item.platform === selectedPlatform;
+
+    return matchesSearch && matchesPlatform;
+  });
 
   const watchedCount = items.filter((i) => i.status === "done").length;
 
@@ -111,10 +131,19 @@ export const HomePageScreen = () => {
         </View>
       )}
 
+      <View style={styles.filtersWrap}>
+        <StatusList
+          selected={selectedPlatform}
+          onSelect={setSelectedPlatform}
+          counts={counts}
+        />
+      </View>
+
       <FlatList
         data={filteredItems}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
+        style={styles.flatList}
         renderItem={({ item }) => (
           <ItemLayout
             id={item.id}
@@ -200,5 +229,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 100,
     gap: 12,
+  },
+  filtersWrap: {
+    marginBottom: 13,
+  },
+  flatList: {
+    marginTop: 0,
   },
 });
