@@ -1,18 +1,16 @@
-import { use, useState } from "react";
+import { useState } from "react";
 import {
   View,
   TextInput,
   Text,
   TouchableOpacity,
-  StyleSheet,
   Modal,
   ScrollView,
-  Dimensions,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { ItemService } from "../../../api/servises/item.service";
-
-const { width } = Dimensions.get("window");
+import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
+import { itemAddingStyles as styles } from "./itemAddingStyles";
 
 interface Props {
   visible: boolean;
@@ -29,8 +27,29 @@ const CATEGORIES = [
 export const ItemAddingForm = ({ visible, onClose }: Props) => {
   const [link, setLink] = useState("");
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
   const [category, setCategory] = useState<string | null>(null);
+  const [remindAt, setRemindAt] = useState<Date | null>(null);
+
+  const handleClose = () => {
+    setLink("");
+    setTitle("");
+    setCategory(null);
+    setRemindAt(null);
+    onClose();
+  };
+
+  const openDatePicker = () => {
+    DateTimePickerAndroid.open({
+      value: remindAt || new Date(),
+      mode: "date",
+      is24Hour: true,
+      onValueChange: (event, date) => {
+        if (date) {
+          setRemindAt(date);
+        }
+      },
+    });
+  };
 
   return (
     <Modal visible={visible} animationType="slide" transparent={false}>
@@ -39,7 +58,7 @@ export const ItemAddingForm = ({ visible, onClose }: Props) => {
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
-        <TouchableOpacity style={styles.closeBtn} onPress={onClose}>
+        <TouchableOpacity style={styles.closeBtn} onPress={handleClose}>
           <Feather name="x" size={28} color="#D9D9D9" />
         </TouchableOpacity>
 
@@ -77,25 +96,18 @@ export const ItemAddingForm = ({ visible, onClose }: Props) => {
           </View>
         </View>
 
-        {/* Description */}
+        {/* Remind At */}
         <View style={[styles.fieldWrap, { marginTop: 11 }]}>
-          <Text style={styles.label}>Description (optional)</Text>
-          <View style={[styles.inputRow, styles.inputMultiline]}>
-            <Feather
-              name="align-left"
-              size={14}
-              color="#616264"
-              style={{ alignSelf: "flex-start", marginTop: 6 }}
-            />
-            <TextInput
-              style={[styles.input, { height: 100, textAlignVertical: "top" }]}
-              placeholder="Why do you want to watch this? Any notes..."
-              placeholderTextColor="#616264"
-              value={description}
-              onChangeText={setDescription}
-              multiline
-            />
-          </View>
+          <Text style={styles.label}>Watch before</Text>
+
+          <TouchableOpacity style={styles.inputRow} onPress={openDatePicker}>
+            <Feather name="clock" size={14} color="#616264" />
+            <Text
+              style={{ color: remindAt ? "#D9D9D9" : "#616264", fontSize: 13 }}
+            >
+              {remindAt ? remindAt.toLocaleString() : "Select date & time"}
+            </Text>
+          </TouchableOpacity>
         </View>
 
         {/* Category */}
@@ -141,13 +153,13 @@ export const ItemAddingForm = ({ visible, onClose }: Props) => {
               await ItemService.create({
                 url: link,
                 title: title || undefined,
-                description: description || undefined,
                 platform: (category as any) ?? "other",
+                remindAt: remindAt ? remindAt.toISOString() : undefined,
               });
               setLink("");
               setTitle("");
-              setDescription("");
               setCategory(null);
+              setRemindAt(null);
               onClose();
             } catch (e) {
               console.error("Failed to create item", e);
@@ -160,107 +172,3 @@ export const ItemAddingForm = ({ visible, onClose }: Props) => {
     </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#000000",
-  },
-  content: {
-    paddingHorizontal: 24,
-    paddingTop: 56,
-    paddingBottom: 40,
-    alignItems: "flex-start",
-  },
-  closeBtn: {
-    alignSelf: "flex-end",
-    marginBottom: 20,
-  },
-  title: {
-    fontFamily: "Inter_700Bold",
-    fontSize: 18,
-    color: "#D9D9D9",
-    marginBottom: 4,
-  },
-  subtitle: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 10,
-    color: "#616264",
-    marginBottom: 20,
-  },
-  fieldWrap: {
-    width: width - 48,
-  },
-  label: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 14,
-    color: "#616264",
-    marginBottom: 6,
-  },
-  inputRow: {
-    width: width - 48,
-    height: 40,
-    backgroundColor: "#000000",
-    borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.1)",
-    borderRadius: 6,
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 10,
-    gap: 8,
-  },
-  inputMultiline: {
-    height: 100,
-    alignItems: "flex-start",
-    paddingVertical: 6,
-  },
-  input: {
-    flex: 1,
-    fontSize: 13,
-    color: "#D9D9D9",
-    padding: 0,
-    fontFamily: "Inter_400Regular",
-  },
-  categoryRow: {
-    flexDirection: "row",
-    gap: 6,
-    marginTop: 8,
-  },
-  categoryBtn: {
-    width: (width - 48 - 6 * 3) / 4,
-    height: 60,
-    backgroundColor: "#1E1E1E",
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 6,
-    borderWidth: 1,
-    borderColor: "transparent",
-  },
-  categoryBtnSelected: {
-    backgroundColor: "#3E171C",
-    borderColor: "#FF0000",
-  },
-  categoryText: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 10,
-    color: "#616264",
-  },
-  categoryTextSelected: {
-    color: "#FF0000",
-  },
-  submitBtn: {
-    width: width - 50,
-    height: 40,
-    backgroundColor: "#FF4D37",
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 18,
-  },
-  submitText: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 12,
-    color: "#fff",
-  },
-});

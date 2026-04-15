@@ -7,15 +7,16 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { Platform } from "../../../api/types/item.types";
+import { statusListStyles as styles } from "./statusListStyles";
 
 interface Props {
-  selected: Platform | "all";
-  onSelect: (platform: Platform | "all") => void;
-  counts: Record<Platform | "all", number>;
+  selected: Platform | "all" | "watched";
+  onSelect: (platform: Platform | "all" | "watched") => void;
+  counts: Record<Platform | "all" | "watched", number>;
 }
 
 const FILTERS: {
-  key: Platform | "all";
+  key: Platform | "all" | "watched";
   label: string;
   icon: string;
 }[] = [
@@ -24,6 +25,7 @@ const FILTERS: {
   { key: Platform.MOVIES, label: "Movies", icon: "film" },
   { key: Platform.SERIES, label: "Series", icon: "tv" },
   { key: Platform.OTHER, label: "Other", icon: "globe" },
+  { key: "watched", label: "Watched", icon: "check-circle" },
 ];
 
 export const StatusList = ({ selected, onSelect, counts }: Props) => {
@@ -73,57 +75,3 @@ export const StatusList = ({ selected, onSelect, counts }: Props) => {
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: "row",
-    paddingHorizontal: 20,
-    paddingVertical: 2,
-    gap: 12,
-  },
-  cell: {
-    width: 110,
-    height: 36,
-    backgroundColor: "#1E1E1E",
-    borderRadius: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 7,
-    paddingHorizontal: 10,
-  },
-  cellSelected: {
-    backgroundColor: "#FF0707",
-  },
-  label: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 13,
-    color: "#616264",
-  },
-  labelSelected: {
-    color: "#fff",
-  },
-  countBadge: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    backgroundColor: "transparent",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  countBadgeSelected: {
-    backgroundColor: "#F66B6B",
-    borderRadius: 11,
-  },
-  countBadgeAll: {
-    marginLeft: 5,
-  },
-  countText: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 12,
-    color: "#616264",
-  },
-  countTextSelected: {
-    color: "#fff",
-  },
-});
