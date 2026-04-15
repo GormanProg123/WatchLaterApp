@@ -1,17 +1,16 @@
-import { useState } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
-  StyleSheet,
   Linking,
-  Dimensions,
+  Image,
+  Alert,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { ItemService } from "../../../api/servises/item.service";
 import { ItemStatus } from "../../../api/types/item.types";
-
-const { width } = Dimensions.get("window");
+import { useRef } from "react";
+import { itemLayoutStyles as styles } from "./itemLayoutStyles";
 
 interface Props {
   id: string;
@@ -19,6 +18,8 @@ interface Props {
   description?: string;
   platform: "youtube" | "movies" | "series" | "other";
   url: string;
+  thumbnailUrl?: string;
+  remindAt?: string;
   createdAt: string;
   status: ItemStatus;
   onDelete: (id: string) => void;
@@ -62,185 +63,111 @@ export const ItemLayout = ({
   title,
   description,
   platform,
+  thumbnailUrl,
   url,
-  createdAt,
+  remindAt,
   status,
-  onDelete,
   onStatusChange,
 }: Props) => {
-  const watched = status === ItemStatus.DONE;
+  const isDeletingRef = useRef(false);
   const cfg = PLATFORM_CONFIG[platform] ?? PLATFORM_CONFIG.other;
 
-  const handleToggleWatched = async () => {
-    const newStatus = watched ? ItemStatus.WANT : ItemStatus.DONE;
-    try {
-      await ItemService.updateStatus(id, newStatus);
-      onStatusChange(id, newStatus);
-    } catch (e) {
-      console.error("Failed to update status", e);
-    }
+  const handleMarkDone = () => {
+    if (isDeletingRef.current) return;
+
+    Alert.alert("Mark as watched?", "You can restore it within 7 days.", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Yes, watched it",
+        onPress: async () => {
+          if (isDeletingRef.current) return;
+          isDeletingRef.current = true;
+          try {
+            await ItemService.updateStatus(id, ItemStatus.DONE);
+            onStatusChange(id, ItemStatus.DONE);
+          } catch (e) {
+            console.error(e);
+            isDeletingRef.current = false;
+          }
+        },
+      },
+    ]);
+  };
+
+  const handleRestore = () => {
+    onStatusChange(id, ItemStatus.WANT);
   };
 
   return (
-    <View style={[styles.container, watched && styles.containerWatched]}>
-      <View style={styles.thumbnail} />
-      <View style={[styles.info, watched && styles.infoWatched]}>
+    <View style={[styles.container, status === "done" && styles.doneContainer]}>
+      <View style={styles.leftCol}>
+        <View
+          style={[
+            styles.platformBadge,
+            { backgroundColor: cfg.bg, borderColor: cfg.color },
+          ]}
+        >
+          <Feather name={cfg.icon as any} size={10} color={cfg.color} />
+          <Text style={[styles.platformText, { color: cfg.color }]}>
+            {cfg.label}
+          </Text>
+        </View>
+
+        {thumbnailUrl ? (
+          <Image
+            source={{ uri: thumbnailUrl }}
+            style={styles.thumbnail}
+            resizeMode="cover"
+          />
+        ) : (
+          <View style={styles.thumbnailPlaceholder}>
+            <Feather name={cfg.icon as any} size={20} color="#333" />
+          </View>
+        )}
+      </View>
+
+      <View style={styles.info}>
         <Text
-          style={[styles.title, watched && styles.titleWatched]}
-          numberOfLines={1}
+          style={[styles.title, status === "done" && styles.doneTitle]}
+          numberOfLines={2}
         >
           {title}
         </Text>
 
         {description ? (
-          <Text
-            style={[styles.description, watched && styles.descriptionWatched]}
-            numberOfLines={1}
-          >
+          <Text style={styles.description} numberOfLines={1}>
             {description}
           </Text>
         ) : null}
 
-        <View style={styles.metaRow}>
-          <View style={[styles.platformBadge, { backgroundColor: cfg.bg }]}>
-            <Feather name={cfg.icon as any} size={12} color={cfg.color} />
-            <Text style={[styles.platformText, { color: cfg.color }]}>
-              {cfg.label}
-            </Text>
-          </View>
-          <View style={styles.dateWrap}>
-            <Feather name="clock" size={10} color="#616264" />
-            <Text style={styles.dateText}>{formatDate(createdAt)}</Text>
-          </View>
+        <View style={styles.dateWrap}>
+          <Feather name="clock" size={10} color="#616264" />
+          <Text style={styles.dateText}>
+            {remindAt ? `Watch before ${formatDate(remindAt)}` : "No deadline"}
+          </Text>
         </View>
 
         <View style={styles.actionsRow}>
-          <TouchableOpacity
-            style={styles.watchedBtn}
-            onPress={handleToggleWatched}
-          >
-            <Feather
-              name="check"
-              size={12}
-              color={watched ? "#FF0000" : "#fff"}
-            />
-            <Text
-              style={[styles.watchedText, watched && styles.watchedTextDone]}
-            >
-              {watched ? "Watched" : "Mark Done"}
-            </Text>
+          <TouchableOpacity onPress={() => Linking.openURL(url)}>
+            <Feather name="external-link" size={15} color="#fff" />
           </TouchableOpacity>
 
-          <View style={styles.rightActions}>
-            <TouchableOpacity onPress={() => Linking.openURL(url)}>
-              <Feather name="external-link" size={16} color="#fff" />
+          {status === ItemStatus.DONE ? (
+            <TouchableOpacity style={styles.restoreBtn} onPress={handleRestore}>
+              <Feather name="rotate-ccw" size={12} color="#fff" />
+              <Text style={styles.restoreText}>Restore</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => onDelete(id)}>
-              <Feather name="trash-2" size={16} color="#FF0000" />
+          ) : (
+            <TouchableOpacity
+              style={styles.markDoneBtn}
+              onPress={handleMarkDone}
+            >
+              <Feather name="check" size={12} color="#fff" />
+              <Text style={styles.markDoneText}>Mark Done</Text>
             </TouchableOpacity>
-          </View>
+          )}
         </View>
       </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    width: width - 40,
-    height: 130,
-    backgroundColor: "#0F1216",
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.1)",
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 12,
-    gap: 12,
-  },
-  containerWatched: {
-    opacity: 0.5,
-  },
-  thumbnail: {
-    width: 130,
-    height: 75,
-    backgroundColor: "#1E1E1E",
-    borderRadius: 6,
-  },
-  info: {
-    flex: 1,
-    gap: 4,
-  },
-  infoWatched: {
-    opacity: 0.7,
-  },
-  title: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 12,
-    color: "#FFFFFF",
-  },
-  titleWatched: {
-    textDecorationLine: "line-through",
-    color: "#888",
-  },
-  description: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 10,
-    color: "#888",
-  },
-  descriptionWatched: {
-    textDecorationLine: "line-through",
-  },
-  metaRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  platformBadge: {
-    width: 68,
-    height: 21,
-    borderRadius: 4,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 4,
-  },
-  platformText: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 10,
-  },
-  dateWrap: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-  },
-  dateText: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 10,
-    color: "#616264",
-  },
-  actionsRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginTop: 2,
-  },
-  watchedBtn: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-  },
-  watchedText: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 8,
-    color: "#fff",
-  },
-  watchedTextDone: {
-    color: "#FF0000",
-  },
-  rightActions: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-});

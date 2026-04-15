@@ -4,12 +4,12 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
   Dimensions,
   FlatList,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { ItemService, Item } from "../../../api/servises/item.service";
+import { ItemService } from "../../../api/servises/item.service";
+import { Item } from "../../../api/types/item.types";
 import { AddButtonItem } from "../../features/ButtonItem";
 import { ItemAddingForm } from "../../features/ItemAddingForm";
 import { ItemLayout } from "../../features/ItemLayout";
@@ -17,8 +17,7 @@ import { useRouter } from "expo-router";
 import { ItemStatus } from "../../../api/types/item.types";
 import { StatusList } from "../../features/StatusLists";
 import { Platform } from "../../../api/types/item.types";
-
-const { width } = Dimensions.get("window");
+import { homepageStyles as styles } from "./homepageStyles";
 
 export const HomePageScreen = () => {
   const router = useRouter();
@@ -26,12 +25,14 @@ export const HomePageScreen = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [formVisible, setFormVisible] = useState(false);
   const [items, setItems] = useState<Item[]>([]);
-  const [selectedPlatform, setSelectedPlatform] = useState<Platform | "all">(
-    "all",
-  );
+  const [selectedPlatform, setSelectedPlatform] = useState<
+    Platform | "all" | "watched"
+  >("all");
 
   const counts = {
     all: items.length,
+
+    watched: items.filter((i) => i.status === "done").length,
     [Platform.YOUTUBE]: items.filter((i) => i.platform === Platform.YOUTUBE)
       .length,
     [Platform.MOVIES]: items.filter((i) => i.platform === Platform.MOVIES)
@@ -44,7 +45,21 @@ export const HomePageScreen = () => {
   const loadItems = useCallback(async () => {
     try {
       const data = await ItemService.getAll();
-      setItems(data);
+      const now = new Date();
+      const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
+      const filteredData = data.filter((item) => {
+        if (item.status === "done" && item.doneAt) {
+          const doneTime = new Date(item.doneAt);
+          if (now.getTime() - doneTime.getTime() > sevenDaysMs) {
+            ItemService.delete(item.id).catch((e) =>
+              console.error("Failed to delete old item", e),
+            );
+            return false;
+          }
+        }
+        return true;
+      });
+      setItems(filteredData);
     } catch (e) {
       console.error("Failed to load items", e);
     }
@@ -54,13 +69,8 @@ export const HomePageScreen = () => {
     loadItems();
   }, [loadItems]);
 
-  const handleDelete = async (id: string) => {
-    try {
-      await ItemService.delete(id);
-      setItems((prev) => prev.filter((item) => item.id !== id));
-    } catch (e) {
-      console.error("Failed to delete item", e);
-    }
+  const handleDelete = (id: string) => {
+    setItems((prev) => prev.filter((item) => item.id !== id));
   };
 
   const handleFormClose = () => {
@@ -74,18 +84,31 @@ export const HomePageScreen = () => {
         item.url.toLowerCase().includes(searchQuery.toLowerCase())
       : true;
 
-    const matchesPlatform =
-      selectedPlatform === "all" || item.platform === selectedPlatform;
+    let matchesPlatform = true;
+
+    if (selectedPlatform === "watched") {
+      matchesPlatform = item.status === "done";
+    } else if (selectedPlatform !== "all") {
+      matchesPlatform =
+        item.platform === selectedPlatform && item.status !== "done";
+    } else {
+      matchesPlatform = item.status !== "done";
+    }
 
     return matchesSearch && matchesPlatform;
   });
 
   const watchedCount = items.filter((i) => i.status === "done").length;
 
-  const handleStatusChange = (id: string, status: ItemStatus) => {
-    setItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, status } : item)),
-    );
+  const handleStatusChange = async (id: string, status: ItemStatus) => {
+    try {
+      await ItemService.updateStatus(id, status);
+      setItems((prev) =>
+        prev.map((item) => (item.id === id ? { ...item, status } : item)),
+      );
+    } catch (e) {
+      console.error("Failed to update status", e);
+    }
   };
 
   return (
@@ -151,7 +174,9 @@ export const HomePageScreen = () => {
             description={item.description}
             platform={item.platform}
             url={item.url}
+            thumbnailUrl={item.thumbnailUrl}
             createdAt={item.createdAt}
+            remindAt={item.remindAt}
             status={item.status}
             onDelete={handleDelete}
             onStatusChange={handleStatusChange}
@@ -166,74 +191,3 @@ export const HomePageScreen = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#000000",
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
-    paddingTop: 56,
-    paddingBottom: 16,
-  },
-  headerLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-  },
-  avatarCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: "#FF0707",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  headerTitles: {
-    flexDirection: "column",
-    gap: 2,
-  },
-  appName: {
-    fontFamily: "Inter_700Bold",
-    fontSize: 18,
-    color: "#fff",
-  },
-  watchedCount: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 12,
-    color: "#616264",
-  },
-  searchWrap: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#1E1E1E",
-    borderRadius: 10,
-    marginHorizontal: 20,
-    marginBottom: 12,
-    paddingHorizontal: 14,
-    height: 44,
-    gap: 10,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 15,
-    color: "#D9D9D9",
-    padding: 0,
-    fontFamily: "Inter_400Regular",
-  },
-  list: {
-    paddingHorizontal: 20,
-    paddingBottom: 100,
-    gap: 12,
-  },
-  filtersWrap: {
-    marginBottom: 13,
-  },
-  flatList: {
-    marginTop: 0,
-  },
-});

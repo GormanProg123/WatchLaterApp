@@ -1,16 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { api } from "../client";
-
-export interface SignInPayload {
-  email: string;
-  password: string;
-}
-
-export interface SignUpPayload {
-  email: string;
-  password: string;
-  displayName?: string;
-}
+import { SignInPayload, SignUpPayload } from "../types/auth.types";
 
 export const authService = {
   async signIn(payload: SignInPayload) {
