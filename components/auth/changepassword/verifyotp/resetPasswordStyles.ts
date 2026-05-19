@@ -1,12 +1,24 @@
 import { StyleSheet } from "react-native";
 
-export const signinStyles = StyleSheet.create({
+export const resetPasswordStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#141414",
-    alignItems: "center",
-    justifyContent: "center",
+    paddingHorizontal: 24,
+    paddingTop: 16,
   },
+
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 32,
+  },
+
+  headerSpacer: {
+    width: 40,
+  },
+
   logoBox: {
     width: 80,
     height: 80,
@@ -15,36 +27,37 @@ export const signinStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 28,
+    alignSelf: "center",
   },
+
   title: {
     fontFamily: "Inter_700Bold",
-    fontSize: 30,
-    color: "#FBF8F8",
+    fontSize: 24,
+    color: "#FFFFFF",
     marginBottom: 8,
+    textAlign: "center",
   },
+
   subtitle: {
     fontFamily: "Inter_400Regular",
-    fontSize: 15,
+    fontSize: 12,
     color: "#616264",
+    textAlign: "center",
     marginBottom: 32,
   },
-  card: {
-    backgroundColor: "#1E1E1E",
-    borderRadius: 16,
-    paddingVertical: 32,
-    paddingHorizontal: 24,
-    alignItems: "center",
+
+  passwordInputContainer: {
+    marginTop: 20,
   },
-  field: {
-    marginBottom: 20,
-  },
+
   label: {
     fontFamily: "Inter_400Regular",
-    fontSize: 16,
+    fontSize: 14,
     color: "#D9D9D9",
     marginBottom: 8,
   },
-  inputWrap: {
+
+  passwordInputWrap: {
     height: 48,
     backgroundColor: "#1E1E1E",
     borderWidth: 1,
@@ -53,47 +66,34 @@ export const signinStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 14,
-    gap: 10,
   },
-  input: {
+
+  passwordInput: {
     flex: 1,
     fontSize: 15,
     color: "#D9D9D9",
     padding: 0,
   },
-  button: {
-    height: 56,
+
+  nextButton: {
+    width: 324,
+    height: 48,
     backgroundColor: "#FF4D37",
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 17,
-    fontFamily: "Inter_700Bold",
-  },
-  signupRow: {
-    flexDirection: "row",
-    marginTop: 28,
-  },
-  signupText: {
-    fontFamily: "DMSans_400Regular",
-    fontSize: 14,
-    color: "#888",
-  },
-  signupLink: {
-    fontFamily: "DMSans_400Regular",
-    fontSize: 14,
-    color: "#FF4D37",
-  },
-  forgotPasswordContainer: {
-    alignSelf: "flex-end",
-    marginBottom: 16,
+    alignSelf: "center",
+    marginBottom: 48,
+    marginTop: "auto",
   },
 
-  forgotPasswordText: {
-    color: "#aaa",
-    fontSize: 13,
+  nextButtonText: {
+    color: "#FFFFFF",
+    fontFamily: "Inter_700Bold",
+    fontSize: 17,
+  },
+
+  nextButtonDisabled: {
+    opacity: 0.5,
   },
 });

@@ -1,9 +1,5 @@
 import { api } from "../client";
-import {
-  ItemStatus,
-  CreateItemPayload,
-  Item,
-} from "../types/item.types";
+import { ItemStatus, CreateItemPayload, Item } from "../types/item.types";
 
 export const ItemService = {
   async create(payload: CreateItemPayload): Promise<Item> {
@@ -59,6 +55,21 @@ export const ItemService = {
     } catch (error) {
       throw error;
     }
+  },
+
+  async toggleNotifications(enabled: boolean) {
+    const { data } = await api.patch("/items/notifications/toggle", {
+      enabled,
+    });
+    return data;
+  },
+
+  async updatePushToken(token: string | undefined) {
+    if (!token) return;
+    const { data } = await api.patch("/items/push-token", {
+      token,
+    });
+    return data;
   },
 
   async delete(id: string): Promise<void> {

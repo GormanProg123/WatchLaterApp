@@ -45,6 +45,10 @@ export const SignInScreen = () => {
     }
   };
 
+  const handleForgotPassword = () => {
+    router.push("/(auth)/forgot-password");
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.logoBox}>
@@ -94,6 +98,13 @@ export const SignInScreen = () => {
             </Pressable>
           </View>
         </View>
+
+        <TouchableOpacity
+          style={styles.forgotPasswordContainer}
+          onPress={handleForgotPassword}
+        >
+          <Text style={styles.forgotPasswordText}>Forgot password?</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity
           style={[styles.button, { width: INPUT_WIDTH }]}
