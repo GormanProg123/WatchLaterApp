@@ -12,6 +12,7 @@ import {
 import { signinStyles as styles } from "./signinStyles";
 import { useRouter } from "expo-router";
 import { authService } from "../../../api/servises/auth.service";
+import { validatePassword } from "../../utils/validators";
 import { Svg, Polygon } from "react-native-svg";
 import { Feather } from "@expo/vector-icons";
 
@@ -23,14 +24,27 @@ export const SignInScreen = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+    setPasswordError(validatePassword(value));
+  };
 
   const handleSignIn = async () => {
     if (!email || !password) {
       Alert.alert("Error", "Something missing");
       return;
     }
+
+    const passwordValidationError = validatePassword(password);
+    if (passwordValidationError) {
+      Alert.alert("Error", passwordValidationError);
+      return;
+    }
+
     try {
       setLoading(true);
       await authService.signIn({ email, password });
@@ -86,7 +100,7 @@ export const SignInScreen = () => {
               placeholder="Enter Password"
               placeholderTextColor="#555"
               value={password}
-              onChangeText={setPassword}
+              onChangeText={handlePasswordChange}
               secureTextEntry={!showPassword}
             />
             <Pressable onPress={() => setShowPassword(!showPassword)}>
@@ -97,6 +111,9 @@ export const SignInScreen = () => {
               />
             </Pressable>
           </View>
+          {passwordError ? (
+            <Text style={styles.errorText}>{passwordError}</Text>
+          ) : null}
         </View>
 
         <TouchableOpacity

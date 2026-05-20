@@ -1,24 +1,27 @@
 import { StyleSheet } from "react-native";
 
-export const resetPasswordStyles = StyleSheet.create({
+export const changeEmailStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#141414",
     paddingHorizontal: 24,
     paddingTop: 16,
   },
-
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     marginBottom: 32,
   },
-
+  backButton: {
+    width: 40,
+    height: 40,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   headerSpacer: {
     width: 40,
   },
-
   logoBox: {
     width: 80,
     height: 80,
@@ -29,7 +32,6 @@ export const resetPasswordStyles = StyleSheet.create({
     marginBottom: 28,
     alignSelf: "center",
   },
-
   title: {
     fontFamily: "Inter_700Bold",
     fontSize: 24,
@@ -37,7 +39,6 @@ export const resetPasswordStyles = StyleSheet.create({
     marginBottom: 8,
     textAlign: "center",
   },
-
   subtitle: {
     fontFamily: "Inter_400Regular",
     fontSize: 12,
@@ -45,36 +46,24 @@ export const resetPasswordStyles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 32,
   },
-
-  passwordInputContainer: {
-    marginTop: 20,
+  phoneInputContainer: {
+    flexDirection: "row",
+    gap: 12,
+    alignItems: "center",
+    marginBottom: 40,
   },
-
-  label: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 14,
-    color: "#D9D9D9",
-    marginBottom: 8,
-  },
-
-  passwordInputWrap: {
-    height: 48,
+  phoneInput: {
+    flex: 1,
+    height: 38,
     backgroundColor: "#1E1E1E",
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.1)",
     borderRadius: 8,
-    flexDirection: "row",
-    alignItems: "center",
     paddingHorizontal: 14,
+    color: "#FFFFFF",
+    fontFamily: "Inter_400Regular",
+    fontSize: 14,
   },
-
-  passwordInput: {
-    flex: 1,
-    fontSize: 15,
-    color: "#D9D9D9",
-    padding: 0,
-  },
-
   nextButton: {
     width: 324,
     height: 48,
@@ -86,19 +75,11 @@ export const resetPasswordStyles = StyleSheet.create({
     marginBottom: 48,
     marginTop: "auto",
   },
-
   nextButtonText: {
     color: "#FFFFFF",
     fontFamily: "Inter_700Bold",
     fontSize: 17,
   },
-
-  errorText: {
-    color: "#FF4D37",
-    fontSize: 12,
-    marginTop: 8,
-  },
-
   nextButtonDisabled: {
     opacity: 0.5,
   },

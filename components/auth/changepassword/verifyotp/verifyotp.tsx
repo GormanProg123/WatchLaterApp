@@ -73,10 +73,8 @@ export const VerifyOtpPage = () => {
       setLoading(true);
       const code = otp.join("");
 
-      // Только проверяем код — без сброса пароля
       await forgotPasswordService.verifyOtpOnly(phoneNumber, code);
 
-      // Переходим на страницу нового пароля
       router.push({
         pathname: "/(auth)/reset-password",
         params: { phone: phoneNumber, code },

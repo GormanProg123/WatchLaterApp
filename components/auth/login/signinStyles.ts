@@ -96,4 +96,9 @@ export const signinStyles = StyleSheet.create({
     color: "#aaa",
     fontSize: 13,
   },
+  errorText: {
+    color: "#FF4D37",
+    fontSize: 12,
+    marginTop: 8,
+  },
 });

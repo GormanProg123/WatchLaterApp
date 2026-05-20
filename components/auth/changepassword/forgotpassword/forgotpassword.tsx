@@ -14,6 +14,7 @@ import { Svg, Polygon } from "react-native-svg";
 import { forgotPasswordStyles as styles } from "./forgotPasswordStyles";
 import { forgotPasswordService } from "../../../../api/servises/forgot.service";
 import { authService } from "../../../../api/servises/auth.service";
+import { userService } from "../../../../api/servises/user.service";
 
 export const ForgotPasswordPage = () => {
   const router = useRouter();
@@ -55,7 +56,7 @@ export const ForgotPasswordPage = () => {
     try {
       setLoading(true);
       const fullPhone = `${selectedCountry.phoneCode}${phoneNumber}`;
-      await forgotPasswordService.updatePhoneNumber(fullPhone);
+      await userService.updatePhoneNumber(fullPhone);
       await forgotPasswordService.requestOtp(fullPhone);
       router.push({
         pathname: "/(auth)/verify-otp",

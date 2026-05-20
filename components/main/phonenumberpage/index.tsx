@@ -9,10 +9,10 @@ import {
   TextInput,
   Pressable,
 } from "react-native";
-import { forgotPasswordService } from "../../../api/servises/forgot.service";
 import { forgotPasswordStyles as styles } from "../../auth/changepassword/forgotpassword/forgotPasswordStyles";
 import { Feather } from "@expo/vector-icons";
 import Svg, { Polygon } from "react-native-svg";
+import { userService } from "../../../api/servises/user.service";
 
 export const AddPhoneScreen = () => {
   const router = useRouter();
@@ -31,7 +31,7 @@ export const AddPhoneScreen = () => {
 
     try {
       setLoading(true);
-      await forgotPasswordService.updatePhoneNumber(phoneNumber);
+      await userService.updatePhoneNumber(phoneNumber);
       Alert.alert("Success", "Phone number saved", [
         { text: "OK", onPress: () => router.back() },
       ]);

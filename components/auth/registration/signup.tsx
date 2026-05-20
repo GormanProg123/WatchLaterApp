@@ -14,6 +14,7 @@ import {
 import { signUpStyles as styles } from "./signUpStyles";
 import { Svg, Polygon } from "react-native-svg";
 import { Feather } from "@expo/vector-icons";
+import { validatePassword } from "../../utils/validators";
 
 const { width } = Dimensions.get("window");
 const CARD_WIDTH = width * 0.88;
@@ -25,15 +26,45 @@ export const SignUpScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [confirmPasswordError, setConfirmPasswordError] = useState<
+    string | null
+  >(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+    setPasswordError(validatePassword(value));
+    if (confirmPassword && confirmPassword !== value) {
+      setConfirmPasswordError("Passwords do not match");
+    } else {
+      setConfirmPasswordError(null);
+    }
+  };
+
+  const handleConfirmPasswordChange = (value: string) => {
+    setConfirmPassword(value);
+    if (value !== password) {
+      setConfirmPasswordError("Passwords do not match");
+    } else {
+      setConfirmPasswordError(null);
+    }
+  };
 
   const handleSignUp = async () => {
     if (!username || !email || !password || !confirmPassword) {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
+
+    const passwordValidationError = validatePassword(password);
+    if (passwordValidationError) {
+      Alert.alert("Error", passwordValidationError);
+      return;
+    }
+
     if (password !== confirmPassword) {
       Alert.alert("Error", "Passwords do not match");
       return;
@@ -104,7 +135,7 @@ export const SignUpScreen = () => {
               placeholder="Enter Password"
               placeholderTextColor="#555"
               value={password}
-              onChangeText={setPassword}
+              onChangeText={handlePasswordChange}
               secureTextEntry={!showPassword}
             />
             <Pressable onPress={() => setShowPassword(!showPassword)}>
@@ -115,6 +146,9 @@ export const SignUpScreen = () => {
               />
             </Pressable>
           </View>
+          {passwordError ? (
+            <Text style={styles.errorText}>{passwordError}</Text>
+          ) : null}
         </View>
 
         <View style={[styles.field, { width: INPUT_WIDTH, marginBottom: 28 }]}>
@@ -126,7 +160,7 @@ export const SignUpScreen = () => {
               placeholder="Repeat Password"
               placeholderTextColor="#555"
               value={confirmPassword}
-              onChangeText={setConfirmPassword}
+              onChangeText={handleConfirmPasswordChange}
               secureTextEntry={!showConfirm}
             />
             <Pressable onPress={() => setShowConfirm(!showConfirm)}>
@@ -137,6 +171,9 @@ export const SignUpScreen = () => {
               />
             </Pressable>
           </View>
+          {confirmPasswordError ? (
+            <Text style={styles.errorText}>{confirmPasswordError}</Text>
+          ) : null}
         </View>
 
         <TouchableOpacity
