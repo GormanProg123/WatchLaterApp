@@ -7,11 +7,13 @@ import {
   Alert,
   TextInput,
 } from "react-native";
+import axios from "axios";
+import { ApiErrorResponse } from "../../../../api/types/api-error.types";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Feather } from "@expo/vector-icons";
 import { Svg, Polygon } from "react-native-svg";
 import { verifyOtpStyles as styles } from "./verifyotpStyles";
-import { forgotPasswordService } from "../../../../api/servises/forgot.service";
+import { forgotPasswordService } from "../../../../api/serviсes/forgot.service";
 
 const OTP_LENGTH = 6;
 const RESEND_TIMEOUT = 60;
@@ -73,19 +75,19 @@ export const VerifyOtpPage = () => {
       setLoading(true);
       const code = otp.join("");
 
-      // Только проверяем код — без сброса пароля
       await forgotPasswordService.verifyOtpOnly(phoneNumber, code);
 
-      // Переходим на страницу нового пароля
       router.push({
         pathname: "/(auth)/reset-password",
         params: { phone: phoneNumber, code },
       });
-    } catch (e: any) {
-      Alert.alert(
-        "Error",
-        e?.response?.data?.message ?? "Invalid or expired OTP",
-      );
+    } catch (e: unknown) {
+      if (axios.isAxiosError<ApiErrorResponse>(e))
+        Alert.alert(
+          "Error",
+          e?.response?.data?.message ?? "Invalid or expired OTP",
+        );
+      else Alert.alert("Error", "Unexpected error");
     } finally {
       setLoading(false);
     }
@@ -99,11 +101,15 @@ export const VerifyOtpPage = () => {
       setTimer(RESEND_TIMEOUT);
       await forgotPasswordService.requestOtp(phoneNumber);
       Alert.alert("Success", "OTP resent");
-    } catch (e: any) {
-      Alert.alert(
-        "Error",
-        e?.response?.data?.message ?? "Failed to resend OTP",
-      );
+    } catch (e: unknown) {
+      if (axios.isAxiosError<ApiErrorResponse>(e)) {
+        Alert.alert(
+          "Error",
+          e?.response?.data?.message ?? "Failed to resend OTP",
+        );
+      } else {
+        Alert.alert("Error", "Unexpected error");
+      }
       setCanResend(true);
     } finally {
       setResendLoading(false);

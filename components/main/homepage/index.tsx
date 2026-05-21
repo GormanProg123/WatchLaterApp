@@ -4,11 +4,10 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Dimensions,
   FlatList,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { ItemService } from "../../../api/servises/item.service";
+import { ItemService } from "../../../api/serviсes/item.service";
 import { Item } from "../../../api/types/item.types";
 import { AddButtonItem } from "../../features/ButtonItem";
 import { ItemAddingForm } from "../../features/ItemAddingForm";

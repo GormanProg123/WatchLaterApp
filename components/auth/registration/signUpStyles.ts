@@ -88,4 +88,9 @@ export const signUpStyles = StyleSheet.create({
     fontSize: 14,
     color: "#FF4D37",
   },
+  errorText: {
+    color: "#FF4D37",
+    fontSize: 12,
+    marginTop: 8,
+  },
 });

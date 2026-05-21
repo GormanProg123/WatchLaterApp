@@ -7,10 +7,11 @@ import {
   Alert,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { ItemService } from "../../../api/servises/item.service";
+import { ItemService } from "../../../api/serviсes/item.service";
 import { ItemStatus } from "../../../api/types/item.types";
 import { useRef } from "react";
 import { itemLayoutStyles as styles } from "./itemLayoutStyles";
+import { PLATFORM_CONFIG } from "../../constants/SystemColors.constants";
 
 interface Props {
   id: string;
@@ -25,33 +26,6 @@ interface Props {
   onDelete: (id: string) => void;
   onStatusChange: (id: string, status: ItemStatus) => void;
 }
-
-const PLATFORM_CONFIG = {
-  youtube: {
-    label: "YouTube",
-    icon: "play",
-    bg: "#3E171C",
-    color: "#FF0000",
-  },
-  movies: {
-    label: "Movies",
-    icon: "film",
-    bg: "#3F2D12",
-    color: "#FFB900",
-  },
-  series: {
-    label: "Series",
-    icon: "tv",
-    bg: "#152846",
-    color: "#50A0F9",
-  },
-  other: {
-    label: "Others",
-    icon: "globe",
-    bg: "#154622",
-    color: "#50F956",
-  },
-} as const;
 
 const formatDate = (dateStr: string): string => {
   const date = new Date(dateStr);

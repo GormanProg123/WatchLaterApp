@@ -12,12 +12,13 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import { Svg, Polygon } from "react-native-svg";
 import { Feather } from "@expo/vector-icons";
 
-import { forgotPasswordService } from "../../../../api/servises/forgot.service";
+import { forgotPasswordService } from "../../../../api/serviсes/forgot.service";
+import { validatePassword } from "../../../utils/validators";
 import { resetPasswordStyles as styles } from "./resetPasswordStyles";
 
 export const ResetPasswordPage = () => {
   const router = useRouter();
-  const { phone, code } = useLocalSearchParams(); // phone вместо email
+  const { phone, code } = useLocalSearchParams();
 
   const phoneNumber =
     typeof phone === "string" ? phone : Array.isArray(phone) ? phone[0] : "";
@@ -25,12 +26,19 @@ export const ResetPasswordPage = () => {
     typeof code === "string" ? code : Array.isArray(code) ? code[0] : "";
 
   const [newPassword, setNewPassword] = useState("");
+  const [passwordError, setPasswordError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const handleNewPasswordChange = (value: string) => {
+    setNewPassword(value);
+    setPasswordError(validatePassword(value));
+  };
+
   const handleReset = async () => {
-    if (!newPassword || newPassword.length < 8) {
-      Alert.alert("Error", "Password must be at least 8 characters");
+    const passwordValidationError = validatePassword(newPassword);
+    if (passwordValidationError) {
+      Alert.alert("Error", passwordValidationError);
       return;
     }
 
@@ -77,11 +85,10 @@ export const ResetPasswordPage = () => {
       <View style={styles.passwordInputContainer}>
         <Text style={styles.label}>New password</Text>
         <View style={styles.passwordInputWrap}>
-          <Feather name="lock" size={18} color="#888" />
           <TextInput
             style={styles.passwordInput}
             value={newPassword}
-            onChangeText={setNewPassword}
+            onChangeText={handleNewPasswordChange}
             secureTextEntry={!showPassword}
             placeholder="Enter new password"
             placeholderTextColor="#666"
@@ -94,6 +101,9 @@ export const ResetPasswordPage = () => {
             />
           </Pressable>
         </View>
+        {passwordError ? (
+          <Text style={styles.errorText}>{passwordError}</Text>
+        ) : null}
       </View>
 
       <View style={{ flex: 1 }} />

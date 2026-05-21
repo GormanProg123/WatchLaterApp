@@ -8,10 +8,11 @@ import {
   Alert,
   TextInput,
 } from "react-native";
-import { forgotPasswordService } from "../../../api/servises/forgot.service";
-import { forgotPasswordStyles as styles } from "../changepassword/forgotpassword/forgotPasswordStyles";
+import { changeEmailStyles as styles } from "./changeEmailStyles";
 import { Feather } from "@expo/vector-icons";
 import Svg, { Polygon } from "react-native-svg";
+import { userService } from "../../../api/serviсes/user.service";
+import { validateEmail } from "../../utils/validators";
 
 export const ChangeEmailScreen = () => {
   const router = useRouter();
@@ -19,14 +20,15 @@ export const ChangeEmailScreen = () => {
   const [loading, setLoading] = useState(false);
 
   const handleSave = async () => {
-    if (!email || !email.includes("@")) {
-      Alert.alert("Error", "Please enter a valid phone number");
+    const error = validateEmail(email);
+    if (error) {
+      Alert.alert("Error", error);
       return;
     }
 
     try {
       setLoading(true);
-      await forgotPasswordService.updateEmail(email);
+      await userService.updateEmail(email);
       Alert.alert("Success", "Email updated", [
         { text: "OK", onPress: () => router.back() },
       ]);

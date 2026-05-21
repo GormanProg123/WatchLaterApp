@@ -1,6 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { api } from "../client";
-import { User } from "../types/user.types";
 
 export const forgotPasswordService = {
   async requestOtp(phoneNumber: string) {
@@ -39,30 +38,6 @@ export const forgotPasswordService = {
         phoneNumber,
         code,
       });
-      return data;
-    } catch (error) {
-      throw error;
-    }
-  },
-
-  async updatePhoneNumber(phoneNumber: string): Promise<User> {
-    try {
-      const { data } = await api.patch("/user/phone", {
-        phoneNumber,
-      });
-
-      return data;
-    } catch (error) {
-      throw error;
-    }
-  },
-
-  async updateEmail(email: string): Promise<User> {
-    try {
-      const { data } = await api.patch("/user/email", {
-        email,
-      });
-
       return data;
     } catch (error) {
       throw error;
