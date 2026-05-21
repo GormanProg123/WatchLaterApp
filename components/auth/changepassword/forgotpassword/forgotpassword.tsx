@@ -8,13 +8,13 @@ import {
   TextInput,
   Pressable,
 } from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
+import { useRouter } from "expo-router";
 import { Feather } from "@expo/vector-icons";
 import { Svg, Polygon } from "react-native-svg";
 import { forgotPasswordStyles as styles } from "./forgotPasswordStyles";
-import { forgotPasswordService } from "../../../../api/servises/forgot.service";
-import { authService } from "../../../../api/servises/auth.service";
-import { userService } from "../../../../api/servises/user.service";
+import { forgotPasswordService } from "../../../../api/serviсes/forgot.service";
+import { authService } from "../../../../api/serviсes/auth.service";
+import { userService } from "../../../../api/serviсes/user.service";
 
 export const ForgotPasswordPage = () => {
   const router = useRouter();

@@ -4,21 +4,11 @@ import { useRouter } from "expo-router";
 import { Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { authService } from "../../../api/servises/auth.service";
-import { ItemService } from "../../../api/servises/item.service";
+import { authService } from "../../../api/serviсes/auth.service";
+import { ItemService } from "../../../api/serviсes/item.service";
 import { accountpageStyles as styles } from "./accountpageStyles";
 import { User } from "../../../api/types/user.types";
-
-const AVATAR_COLORS = [
-  "#E74C3C",
-  "#8E44AD",
-  "#2980B9",
-  "#27AE60",
-  "#F39C12",
-  "#16A085",
-  "#D35400",
-  "#C0392B",
-];
+import { AVATAR_COLORS } from "../../constants/SystemColors.constants";
 
 const getAvatarColor = (name: string): string => {
   const index = name.charCodeAt(0) % AVATAR_COLORS.length;

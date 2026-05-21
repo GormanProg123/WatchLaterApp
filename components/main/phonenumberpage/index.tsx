@@ -12,7 +12,9 @@ import {
 import { forgotPasswordStyles as styles } from "../../auth/changepassword/forgotpassword/forgotPasswordStyles";
 import { Feather } from "@expo/vector-icons";
 import Svg, { Polygon } from "react-native-svg";
-import { userService } from "../../../api/servises/user.service";
+import { userService } from "../../../api/serviсes/user.service";
+import { ApiErrorResponse } from "../../../api/types/api-error.types";
+import axios from "axios";
 
 export const AddPhoneScreen = () => {
   const router = useRouter();
@@ -35,11 +37,13 @@ export const AddPhoneScreen = () => {
       Alert.alert("Success", "Phone number saved", [
         { text: "OK", onPress: () => router.back() },
       ]);
-    } catch (e: any) {
-      Alert.alert(
-        "Error",
-        e?.response?.data?.message ?? "Failed to save phone number",
-      );
+    } catch (e: unknown) {
+      if (axios.isAxiosError<ApiErrorResponse>(e)) {
+        const message = e.response?.data?.message ?? "Update phone failed";
+        Alert.alert("Error", message);
+      } else {
+        Alert.alert("Error", "Unexpected error");
+      }
     } finally {
       setLoading(false);
     }

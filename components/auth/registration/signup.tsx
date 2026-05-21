@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "expo-router";
-import { authService } from "../../../api/servises/auth.service";
+import { authService } from "../../../api/serviсes/auth.service";
 import {
   View,
   Text,
@@ -14,7 +14,9 @@ import {
 import { signUpStyles as styles } from "./signUpStyles";
 import { Svg, Polygon } from "react-native-svg";
 import { Feather } from "@expo/vector-icons";
-import { validatePassword } from "../../utils/validators";
+import { validateEmail, validatePassword } from "../../utils/validators";
+import axios from "axios";
+import { ApiErrorResponse } from "../../../api/types/api-error.types";
 
 const { width } = Dimensions.get("window");
 const CARD_WIDTH = width * 0.88;
@@ -27,6 +29,7 @@ export const SignUpScreen = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
   const [confirmPasswordError, setConfirmPasswordError] = useState<
     string | null
   >(null);
@@ -54,8 +57,18 @@ export const SignUpScreen = () => {
   };
 
   const handleSignUp = async () => {
-    if (!username || !email || !password || !confirmPassword) {
-      Alert.alert("Error", "Please fill in all fields");
+    const emailValidation = validateEmail(email);
+    const passwordValidation = validatePassword(password);
+
+    setEmailError(emailValidation);
+    setPasswordError(passwordValidation);
+
+    if (
+      !username ||
+      emailValidation ||
+      passwordValidation ||
+      password !== confirmPassword
+    ) {
       return;
     }
 
@@ -73,11 +86,14 @@ export const SignUpScreen = () => {
       setLoading(true);
       await authService.signUp({ email, password, displayName: username });
       router.replace("/(app)/home");
-    } catch (e: any) {
-      Alert.alert(
-        "Error",
-        e?.response?.data?.message ?? "Something went wrong",
-      );
+    } catch (e: unknown) {
+      if (axios.isAxiosError<ApiErrorResponse>(e)) {
+        const message = e.response?.data?.message ?? "Authentication failed";
+
+        Alert.alert("Error", message);
+      } else {
+        Alert.alert("Error", "Unexpected error");
+      }
     } finally {
       setLoading(false);
     }
@@ -112,6 +128,9 @@ export const SignUpScreen = () => {
 
         <View style={[styles.field, { width: INPUT_WIDTH }]}>
           <Text style={styles.label}>Email</Text>
+          {emailError ? (
+            <Text style={styles.errorText}>{emailError}</Text>
+          ) : null}
           <View style={[styles.inputWrap, { width: INPUT_WIDTH }]}>
             <Feather name="mail" size={18} color="#888" />
             <TextInput

@@ -8,23 +8,15 @@ import {
   ScrollView,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { ItemService } from "../../../api/servises/item.service";
+import { ItemService } from "../../../api/serviсes/item.service";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { itemAddingStyles as styles } from "./itemAddingStyles";
+import {
+  ItemAddingFormProps,
+  CATEGORIES,
+} from "../../constants/itemAdding.constants";
 
-interface Props {
-  visible: boolean;
-  onClose: () => void;
-}
-
-const CATEGORIES = [
-  { key: "youtube", label: "YouTube", icon: "play" },
-  { key: "movies", label: "Movies", icon: "film" },
-  { key: "series", label: "Series", icon: "tv" },
-  { key: "other", label: "Others", icon: "globe" },
-] as const;
-
-export const ItemAddingForm = ({ visible, onClose }: Props) => {
+export const ItemAddingForm = ({ visible, onClose }: ItemAddingFormProps) => {
   const [link, setLink] = useState("");
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState<string | null>(null);
@@ -65,7 +57,6 @@ export const ItemAddingForm = ({ visible, onClose }: Props) => {
         <Text style={styles.title}>Add to Watchlist</Text>
         <Text style={styles.subtitle}>Save a link to watch later</Text>
 
-        {/* Link */}
         <View style={styles.fieldWrap}>
           <Text style={styles.label}>Link</Text>
           <View style={styles.inputRow}>
@@ -81,7 +72,6 @@ export const ItemAddingForm = ({ visible, onClose }: Props) => {
           </View>
         </View>
 
-        {/* Title */}
         <View style={[styles.fieldWrap, { marginTop: 11 }]}>
           <Text style={styles.label}>Title</Text>
           <View style={styles.inputRow}>
@@ -96,7 +86,6 @@ export const ItemAddingForm = ({ visible, onClose }: Props) => {
           </View>
         </View>
 
-        {/* Remind At */}
         <View style={[styles.fieldWrap, { marginTop: 11 }]}>
           <Text style={styles.label}>Watch before</Text>
 
@@ -110,7 +99,6 @@ export const ItemAddingForm = ({ visible, onClose }: Props) => {
           </TouchableOpacity>
         </View>
 
-        {/* Category */}
         <View style={[styles.fieldWrap, { marginTop: 14 }]}>
           <Text style={styles.label}>Category</Text>
           <View style={styles.categoryRow}>
@@ -144,7 +132,6 @@ export const ItemAddingForm = ({ visible, onClose }: Props) => {
           </View>
         </View>
 
-        {/* Submit */}
         <TouchableOpacity
           style={styles.submitBtn}
           onPress={async () => {

@@ -12,7 +12,7 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import { Svg, Polygon } from "react-native-svg";
 import { Feather } from "@expo/vector-icons";
 
-import { forgotPasswordService } from "../../../../api/servises/forgot.service";
+import { forgotPasswordService } from "../../../../api/serviсes/forgot.service";
 import { validatePassword } from "../../../utils/validators";
 import { resetPasswordStyles as styles } from "./resetPasswordStyles";
 

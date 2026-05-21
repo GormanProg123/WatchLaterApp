@@ -46,7 +46,6 @@ export const verifyOtpStyles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 32,
   },
-  // OTP input container
   otpContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -65,7 +64,6 @@ export const verifyOtpStyles = StyleSheet.create({
     fontFamily: "Inter_700Bold",
     fontSize: 20,
   },
-  // Resend OTP
   resendContainer: {
     alignItems: "center",
     marginBottom: 32,
@@ -83,14 +81,12 @@ export const verifyOtpStyles = StyleSheet.create({
   resendLinkDisabled: {
     opacity: 0.5,
   },
-  // Timer
   timerText: {
     fontFamily: "Inter_400Regular",
     fontSize: 12,
     color: "#888",
     marginTop: 8,
   },
-  // New password input (optional if resetting)
   passwordInputContainer: {
     marginBottom: 20,
   },
@@ -117,7 +113,6 @@ export const verifyOtpStyles = StyleSheet.create({
     color: "#D9D9D9",
     padding: 0,
   },
-  // Next button
   nextButton: {
     width: 324,
     height: 48,
