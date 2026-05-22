@@ -1,11 +1,17 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform, StatusBar } from "react-native";
 
 export const splachScreenStyles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#141414",
+  },
   container: {
     flex: 1,
     backgroundColor: "#141414",
     alignItems: "center",
     justifyContent: "center",
+    paddingTop: Platform.OS === "android" ? (StatusBar.currentHeight ?? 24) : 0,
+    paddingHorizontal: 16,
   },
   logoBox: {
     width: 80,
@@ -21,5 +27,7 @@ export const splachScreenStyles = StyleSheet.create({
     fontSize: 28,
     color: "#FFFFFF",
     letterSpacing: 0.5,
+    textAlign: "center",
+    includeFontPadding: false,
   },
 });

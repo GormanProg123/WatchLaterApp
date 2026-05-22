@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
-import { View, Animated } from "react-native";
+import { View, Animated, Platform, StatusBar } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { Svg, Polygon } from "react-native-svg";
 import { splachScreenStyles as styles } from "./splachScreenStyles";
@@ -73,29 +74,31 @@ export const SplashScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Animated.View
-        style={[
-          styles.logoBox,
-          { opacity: logoOpacity, transform: [{ scale: logoScale }] },
-        ]}
-      >
-        <Svg width={40} height={40} viewBox="0 0 32 32">
-          <Polygon points="11,7 27,16 11,25" fill="white" />
-        </Svg>
-      </Animated.View>
+    <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
+      <View style={styles.container}>
+        <Animated.View
+          style={[
+            styles.logoBox,
+            { opacity: logoOpacity, transform: [{ scale: logoScale }] },
+          ]}
+        >
+          <Svg width={40} height={40} viewBox="0 0 32 32">
+            <Polygon points="11,7 27,16 11,25" fill="white" />
+          </Svg>
+        </Animated.View>
 
-      <Animated.Text
-        style={[
-          styles.title,
-          {
-            opacity: textOpacity,
-            transform: [{ translateY: textTranslate }],
-          },
-        ]}
-      >
-        WatchLater
-      </Animated.Text>
-    </View>
+        <Animated.Text
+          style={[
+            styles.title,
+            {
+              opacity: textOpacity,
+              transform: [{ translateY: textTranslate }],
+            },
+          ]}
+        >
+          WatchLater
+        </Animated.Text>
+      </View>
+    </SafeAreaView>
   );
 };

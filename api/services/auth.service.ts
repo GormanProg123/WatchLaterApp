@@ -39,7 +39,6 @@ export const authService = {
         ...payload,
         ...(pushToken ? { pushToken } : {}),
       });
-      await ItemService.updatePushToken(pushToken);
       await AsyncStorage.setItem("token", data.token);
       return data;
     } catch (error) {
@@ -72,6 +71,7 @@ export const authService = {
 
   async getMe() {
     try {
+      const token = await AsyncStorage.getItem("token");
       const { data } = await api.get("/auth/me");
       return data;
     } catch (error) {
