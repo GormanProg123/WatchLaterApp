@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { signinStyles as styles } from "./signinStyles";
 import { useRouter } from "expo-router";
-import { authService } from "../../../api/serviсes/auth.service";
+import { authService } from "../../../api/services/auth.service";
 import { validatePassword, validateEmail } from "../../utils/validators";
 import { Svg, Polygon } from "react-native-svg";
 import { Feather } from "@expo/vector-icons";

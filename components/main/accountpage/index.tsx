@@ -4,8 +4,8 @@ import { useRouter } from "expo-router";
 import { Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { authService } from "../../../api/serviсes/auth.service";
-import { ItemService } from "../../../api/serviсes/item.service";
+import { authService } from "../../../api/services/auth.service";
+import { ItemService } from "../../../api/services/item.service";
 import { accountpageStyles as styles } from "./accountpageStyles";
 import { User } from "../../../api/types/user.types";
 import { AVATAR_COLORS } from "../../constants/SystemColors.constants";

@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { ItemService } from "../../../api/serviсes/item.service";
+import { ItemService } from "../../../api/services/item.service";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { itemAddingStyles as styles } from "./itemAddingStyles";
 import {

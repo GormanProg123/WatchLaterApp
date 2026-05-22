@@ -7,7 +7,7 @@ import {
   Alert,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { ItemService } from "../../../api/serviсes/item.service";
+import { ItemService } from "../../../api/services/item.service";
 import { ItemStatus } from "../../../api/types/item.types";
 import { useRef } from "react";
 import { itemLayoutStyles as styles } from "./itemLayoutStyles";

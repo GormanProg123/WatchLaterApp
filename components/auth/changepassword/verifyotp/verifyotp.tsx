@@ -13,7 +13,7 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import { Feather } from "@expo/vector-icons";
 import { Svg, Polygon } from "react-native-svg";
 import { verifyOtpStyles as styles } from "./verifyotpStyles";
-import { forgotPasswordService } from "../../../../api/serviсes/forgot.service";
+import { forgotPasswordService } from "../../../../api/services/forgot.service";
 
 const OTP_LENGTH = 6;
 const RESEND_TIMEOUT = 60;

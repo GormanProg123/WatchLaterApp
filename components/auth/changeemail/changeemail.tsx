@@ -11,7 +11,7 @@ import {
 import { changeEmailStyles as styles } from "./changeEmailStyles";
 import { Feather } from "@expo/vector-icons";
 import Svg, { Polygon } from "react-native-svg";
-import { userService } from "../../../api/serviсes/user.service";
+import { userService } from "../../../api/services/user.service";
 import { validateEmail } from "../../utils/validators";
 
 export const ChangeEmailScreen = () => {

@@ -3,8 +3,7 @@ import { View, Animated } from "react-native";
 import { useRouter } from "expo-router";
 import { Svg, Polygon } from "react-native-svg";
 import { splachScreenStyles as styles } from "./splachScreenStyles";
-import { authService } from "../../../api/serviсes/auth.service";
-
+import { authService } from "../../../api/services/auth.service";
 export const SplashScreen = () => {
   const router = useRouter();
 

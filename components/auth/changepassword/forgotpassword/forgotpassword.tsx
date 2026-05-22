@@ -12,9 +12,9 @@ import { useRouter } from "expo-router";
 import { Feather } from "@expo/vector-icons";
 import { Svg, Polygon } from "react-native-svg";
 import { forgotPasswordStyles as styles } from "./forgotPasswordStyles";
-import { forgotPasswordService } from "../../../../api/serviсes/forgot.service";
-import { authService } from "../../../../api/serviсes/auth.service";
-import { userService } from "../../../../api/serviсes/user.service";
+import { forgotPasswordService } from "../../../../api/services/forgot.service";
+import { authService } from "../../../../api/services/auth.service";
+import { userService } from "../../../../api/services/user.service";
 
 export const ForgotPasswordPage = () => {
   const router = useRouter();

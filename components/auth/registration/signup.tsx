@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "expo-router";
-import { authService } from "../../../api/serviсes/auth.service";
+import { authService } from "../../../api/services/auth.service";
 import {
   View,
   Text,

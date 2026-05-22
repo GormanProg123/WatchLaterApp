@@ -12,7 +12,7 @@ import {
 import { forgotPasswordStyles as styles } from "../../auth/changepassword/forgotpassword/forgotPasswordStyles";
 import { Feather } from "@expo/vector-icons";
 import Svg, { Polygon } from "react-native-svg";
-import { userService } from "../../../api/serviсes/user.service";
+import { userService } from "../../../api/services/user.service";
 import { ApiErrorResponse } from "../../../api/types/api-error.types";
 import axios from "axios";
 
