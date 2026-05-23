@@ -5,6 +5,24 @@ import { useRouter } from "expo-router";
 import { Svg, Polygon } from "react-native-svg";
 import { splachScreenStyles as styles } from "./splachScreenStyles";
 import { authService } from "../../../api/services/auth.service";
+import { api } from "../../../api/client";
+
+const waitForServer = async (): Promise<void> => {
+  const MAX_ATTEMPTS = 10;
+  const DELAY = 4000;
+
+  for (let i = 0; i < MAX_ATTEMPTS; i++) {
+    try {
+      await api.get("/auth/ping", { timeout: 5000 });
+      return;
+    } catch {
+      if (1 < MAX_ATTEMPTS - 1) {
+        await new Promise((resolve) => setTimeout(resolve, DELAY));
+      }
+    }
+  }
+};
+
 export const SplashScreen = () => {
   const router = useRouter();
 
@@ -16,6 +34,15 @@ export const SplashScreen = () => {
   useEffect(() => {
     startAnimation();
     checkAuth();
+
+    const keepalive = setInterval(
+      () => {
+        api.get("/auth/ping").catch(() => {});
+      },
+      14 * 60 * 1000,
+    );
+
+    return () => clearInterval(keepalive);
   }, []);
 
   const startAnimation = () => {
@@ -49,6 +76,10 @@ export const SplashScreen = () => {
 
   const checkAuth = async () => {
     try {
+      await Promise.all([
+        new Promise((resolve) => setTimeout(resolve, 1500)),
+        waitForServer(),
+      ]);
       const token = await authService.getToken();
 
       if (!token) {
