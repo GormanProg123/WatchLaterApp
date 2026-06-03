@@ -12,7 +12,7 @@
 
 Cross-platform mobile client for WatchLater — a personal watch list manager with push notifications, SMS password recovery and automatic thumbnail fetching.
 
-[🖥️ Backend API](https://github.com/GormanProg123/WatchLaterApp-BackEnd) · [📖 API Docs](https://watchlaterapp-backend.onrender.com/api/docs) · [🐛 Report Bug](https://github.com/GormanProg123/WatchLaterApp/issues)
+[🖥️ Backend API](https://github.com/GormanProg123/WatchLaterApp-BackEnd) · [🐛 Report Bug](https://github.com/GormanProg123/WatchLaterApp/issues)
 
 </div>
 
