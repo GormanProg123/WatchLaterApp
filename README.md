@@ -47,41 +47,6 @@ Cross-platform mobile client for WatchLater — a personal watch list manager wi
 
 ---
 
-## 📁 Project Structure
-
-```
-app/
-├── (app)/                      # Protected app screens (requires auth)
-├── (auth)/                     # Auth flow screens
-│   └── splash-screen           # Entry point → login or home
-└── screens/
-    ├── _layout.tsx             # Root layout: fonts, notifications, keepalive
-    └── index.tsx               # Redirect entry point
-
-components/
-├── auth/                       # Auth-related UI components
-├── constants/                  # Colors, fonts, spacing tokens
-└── features/
-    ├── ButtonItem/             # Reusable action button
-    ├── ItemAddingForm/         # Add new link form
-    ├── ItemLayout/             # Watch item card layout
-    └── StatusLists/            # Watched / pending lists
-
-main/
-├── accountpage/                # Profile & settings screen
-├── homepage/                   # Main watch list screen
-└── phonenumberpage/            # Phone number update screen
-
-api/
-└── client.ts                   # Axios instance with base URL & interceptors
-
-utils/
-├── notifications.ts            # Push token registration & permission handling
-└── validators.ts               # Input validation helpers
-
-assets/                         # Icons, splash screen, images
-```
-
 ---
 
 ## 🚀 Getting Started
