@@ -20,8 +20,21 @@
         "EXPO_PUBLIC_API_URL": "https://watchlaterapp-backend.onrender.com"
       }
     },
+    "release-apk": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://watchlaterapp-backend.onrender.com"
+      }
+    },
     "production": {
       "autoIncrement": true,
+      "android": {
+        "buildType": "app-bundle"
+      },
       "env": {
         "EXPO_PUBLIC_API_URL": "https://watchlaterapp-backend.onrender.com"
       }

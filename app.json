@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "watchlater-mobile",
+    "name": "WatchLater",
     "slug": "watchlater-mobile",
     "scheme": "watchlater",
     "version": "1.0.0",
@@ -25,21 +25,30 @@
       }
     },
     "android": {
+      "jsEngine": "hermes",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "usesCleartextTraffic": true,
-      "package": "com.anonymous.watchlatermobile"
+      "package": "com.anonymous.watchlatermobile",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/icon.png"
     },
     "plugins": [
       "expo-router",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#ffffff"
+        }
+      ]
     ],
     "extra": {
       "router": {},
