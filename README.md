@@ -18,6 +18,17 @@ Cross-platform mobile client for WatchLater — a personal watch list manager wi
 
 ---
 
+## 📥 Download
+
+Download the latest APK for Android:
+
+👉 [Download latest release](https://github.com/GormanProg123/WatchLaterApp/releases/latest)
+
+All versions:
+https://github.com/GormanProg123/WatchLaterApp/releases
+
+---
+
 ## ✨ Features
 
 - 🔐 **JWT Authentication** — register, login, secure token storage via AsyncStorage
