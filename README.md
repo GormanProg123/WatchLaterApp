@@ -47,8 +47,6 @@ Cross-platform mobile client for WatchLater — a personal watch list manager wi
 
 ---
 
----
-
 ## 🚀 Getting Started
 
 ### Prerequisites
